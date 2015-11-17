@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 
+import java.util.ArrayList;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 
@@ -16,9 +17,11 @@ public class KrakoutGame {
 
     private final Krakout krakoutApp;
     private final DrawingBoard line;
+    private final int numberOfBoxes = 100;
+    private final int BoxesOneRow = 19;
     static boolean BallIsMove;
     private KrakoutBall ball;
-
+ArrayList<KrakoutSquare> square = new ArrayList<>();
     /**
      * Initialize the game. Remove the example code and replace with code that
      * creates a random piece.
@@ -27,8 +30,8 @@ public class KrakoutGame {
      * @param board A reference to the board on which Squares are drawn
      */
     public KrakoutGame(Krakout krakoutApp, KrakoutBoard board) {
-        // Some sample code that places two squares on the board.
-        // Take this out and construct your random piece here.
+//         Some sample code that places two squares on the board.
+//         Take this out and construct your random piece here.
 //        KrakoutSquare square1 = new KrakoutSquare(board);
 //        square1.moveToKrakoutLocation(1, 1);
 //        square1.setColor(Color.BLUEVIOLET);
@@ -41,9 +44,20 @@ public class KrakoutGame {
         line.setLine(Color.BLACK, 5.0);
         this.line = line;
 
+        
+  
+        for (int i = 0; i < numberOfBoxes; i++) {
+            square.add(i, new KrakoutSquare(board));
+            square.get(i).moveToKrakoutLocation((1 + i- BoxesOneRow* (i/BoxesOneRow)), 1 + i/BoxesOneRow);
+            square.get(i).setColor(Color.rgb((int)(Math.random()*255),(int)(Math.random()*255),(int)(Math.random()*255)));
+            
+        }
+        
         KrakoutBall ball = new KrakoutBall(board, line);
         ball.setBall(Color.BLACK, Color.WHITE);
         this.ball = ball;
+        
+    //    DrawingBoxes boxes = new DrawingBoxes(board);
 
         this.krakoutApp = krakoutApp;
         // You can use this to show the score, etc.
@@ -56,6 +70,11 @@ public class KrakoutGame {
     void update() {
         Point2D directionVector = ball.updateVector();
         ball.moveBall(directionVector.getX() + ball.getCenterX(), directionVector.getY() + ball.getCenterY());
+        
+        for (int i = 0; i < numberOfBoxes; i++) {
+            square.get(i).move();
+        
+        }
     }
 
     /**
@@ -80,5 +99,9 @@ public class KrakoutGame {
         }
 
     }
+    
+
+
+
 
 }
