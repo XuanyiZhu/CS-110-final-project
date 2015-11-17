@@ -65,15 +65,6 @@ public class KrakoutBall {
         ball.setFill(FillColor);
     }
 
-//    public Point2D currentTarget(){
-//        return target;
-//    }
-//    //the ball is on the board. so it will go straight up
-//    public Point2D directionVector(){
-//        System.out.println("the ball starts moving");
-//        directionVector = new Point2D(0,-1).normalize();
-//        return directionVector;
-//    }
     public Point2D updateVector() {
 
         // if the ball touching the upper boundary, the direction vector will change
