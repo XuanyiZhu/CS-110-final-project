@@ -5,8 +5,8 @@
  */
 
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -22,12 +22,12 @@ import javafx.scene.shape.Rectangle;
  */
 public class KrakoutSquare {
     // The shape for the square
-    private final Rectangle shape = new Rectangle(0, 0, KrakoutBoard.SQUARE_SIZE, KrakoutBoard.SQUARE_SIZE);
+    Rectangle shape = new Rectangle(0, 0, KrakoutBoard.SQUARE_SIZE, KrakoutBoard.SQUARE_SIZE);
     // The x location in board coordinates
-    private final IntegerProperty krakout_x = new SimpleIntegerProperty();
+    private DoubleProperty krakout_x = new SimpleDoubleProperty();
     // The y location in board coordinates
-    private final IntegerProperty krakout_y = new SimpleIntegerProperty();
-    private final KrakoutBoard board;
+    private DoubleProperty krakout_y = new SimpleDoubleProperty();
+    private KrakoutBoard board;
     
     /**
      * Creates a square and draws it in the board. The shape for a square is 
@@ -54,18 +54,22 @@ public class KrakoutSquare {
      * @param x x-coordinate on the tetris board
      * @param y y-coordinate on the tetris board
      */
-    public void moveToKrakoutLocation(int x, int y) {
+    public void moveToKrakoutLocation(double x, double y) {
         krakout_x.unbind();
         krakout_y.unbind();
         krakout_x.set(x); // due to binding, moves to x*SQUARE_SIZE, y*SQUARE_SIZE
         krakout_y.set(y);
     }
     
+    public void move(){
+        moveToKrakoutLocation(getX(),getY()+0.005);
+    }
+    
     /**
      * Get the x location of the square in board coordinates.
      * @return current x location on the board
      */
-    public int getX() {
+    public double getX() {
         return krakout_x.get();
     }
     
@@ -73,7 +77,7 @@ public class KrakoutSquare {
      * Get the y location of the square in board coordinates.
      * @return current y location on the board
      */
-    public int getY() {
+    public double getY() {
         return krakout_y.get();
     }
 
@@ -85,7 +89,7 @@ public class KrakoutSquare {
      * the property binding functionality.
      * @return the x location IntegerProperty
      */
-    public IntegerProperty xProperty() {
+    public DoubleProperty xProperty() {
         return krakout_x;
     }
     
@@ -97,7 +101,7 @@ public class KrakoutSquare {
      * the property binding functionality.
      * @return the y location IntegerProperty
      */
-    public IntegerProperty yProperty() {
+    public DoubleProperty yProperty() {
         return krakout_y;
     }
 
@@ -115,4 +119,5 @@ public class KrakoutSquare {
     void removeFromDrawing() {
         board.getChildren().remove(shape);
     }
+
 }
