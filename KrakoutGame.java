@@ -11,17 +11,16 @@ import javafx.scene.paint.Color;
 /**
  * This should be implemented to include your game control.
  *
- * @author pipWolfe
+ * @author Xuanyi Zhu
  */
 public class KrakoutGame {
 
     private final Krakout krakoutApp;
     private final DrawingBoard line;
-    private final int numberOfBoxes = 100;
-    private final int BoxesOneRow = 19;
-    static boolean BallIsMove;
-    private KrakoutBall ball;
-ArrayList<KrakoutSquare> square = new ArrayList<>();
+
+    private final KrakoutBall ball;
+    ArrayList<KrakoutSquare> square = new ArrayList<>();
+
     /**
      * Initialize the game. Remove the example code and replace with code that
      * creates a random piece.
@@ -32,36 +31,30 @@ ArrayList<KrakoutSquare> square = new ArrayList<>();
     public KrakoutGame(Krakout krakoutApp, KrakoutBoard board) {
 //         Some sample code that places two squares on the board.
 //         Take this out and construct your random piece here.
-//        KrakoutSquare square1 = new KrakoutSquare(board);
-//        square1.moveToKrakoutLocation(1, 1);
-//        square1.setColor(Color.BLUEVIOLET);
-//        
-//        KrakoutSquare square2 = new KrakoutSquare(board);
-//        square2.moveToKrakoutLocation(5, 3);
-//        square2.setColor(Color.RED);
 
         DrawingBoard line = new DrawingBoard(board);
         line.setLine(Color.BLACK, 5.0);
         this.line = line;
 
-        
-  
-        for (int i = 0; i < numberOfBoxes; i++) {
+        for (int i = 0; i < KrakoutBoard.numberOfBoxes; i++) {
             square.add(i, new KrakoutSquare(board));
-            square.get(i).moveToKrakoutLocation((1 + i- BoxesOneRow* (i/BoxesOneRow)), 1 + i/BoxesOneRow);
-            square.get(i).setColor(Color.rgb((int)(Math.random()*255),(int)(Math.random()*255),(int)(Math.random()*255)));
-            
+            square.get(i).moveToKrakoutLocation((1 + i - KrakoutBoard.X_DIM_SQUARES * (i / KrakoutBoard.X_DIM_SQUARES)), 1 + i / KrakoutBoard.X_DIM_SQUARES);
+            square.get(i).setColor(Color.rgb((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255)));
+
         }
-        
+
         KrakoutBall ball = new KrakoutBall(board, line);
         ball.setBall(Color.BLACK, Color.WHITE);
         this.ball = ball;
-        
-    //    DrawingBoxes boxes = new DrawingBoxes(board);
-
         this.krakoutApp = krakoutApp;
         // You can use this to show the score, etc.
         krakoutApp.setMessage("Game has started!");
+    }
+    
+    public Point2D getBoxesLocation(int i){
+        
+        Point2D Location = new Point2D(square.get(i).getX() * KrakoutBoard.SQUARE_SIZE,square.get(i).getY() * KrakoutBoard.SQUARE_SIZE);
+        return Location;
     }
 
     /**
@@ -70,18 +63,18 @@ ArrayList<KrakoutSquare> square = new ArrayList<>();
     void update() {
         Point2D directionVector = ball.updateVector();
         ball.moveBall(directionVector.getX() + ball.getCenterX(), directionVector.getY() + ball.getCenterY());
-        
-        for (int i = 0; i < numberOfBoxes; i++) {
-            square.get(i).move();
-        
+
+        for (int i = 0; i < KrakoutBoard.numberOfBoxes; i++) {
+            square.get(i).move(0.005);
+
         }
+
     }
 
     /**
      * Move the current krakout piece left.
      */
     void left() {
-
         System.out.println("left key was pressed!");
         if (line.getStartX() > 10) {
             line.moreBoard(line.getStartX() - 10, line.getEndX() - 10);
@@ -99,9 +92,6 @@ ArrayList<KrakoutSquare> square = new ArrayList<>();
         }
 
     }
-    
-
-
 
 
 }
