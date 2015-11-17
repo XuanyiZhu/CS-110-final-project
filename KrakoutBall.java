@@ -31,7 +31,7 @@ public class KrakoutBall {
 
     public KrakoutBall(KrakoutBoard board, DrawingBoard line) {
         this.board = board;
-        this.board.getChildren().add(ball);
+        board.getChildren().add(ball);
 
         this.line = line;
 
