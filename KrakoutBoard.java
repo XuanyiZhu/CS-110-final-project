@@ -14,12 +14,12 @@ import javafx.scene.layout.Pane;
 public class KrakoutBoard extends Pane {
 
     // The size of the side of a krakout square
-
     public static final int SQUARE_SIZE = 20;
     // The number of squares that fit on the screen in the x and y dimensions
     public static final int X_DIM_SQUARES = 20;
     public static final int Y_DIM_SQUARES = 30;
     public static final double BoardLength = 0.2;
+    public static final int numberOfBoxes = 100;
 
     /**
      * Sizes the board to hold the specified number of squares in the x and y
