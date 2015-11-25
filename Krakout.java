@@ -4,6 +4,7 @@
  * the directional keys on the keyboard. The bricks are coming down.
  */
 
+import java.io.File;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -11,7 +12,11 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -28,6 +33,7 @@ public class Krakout extends Application {
     private KrakoutBoard krakoutBoard;
     private Timeline animation;
     private Label statusLabel;
+    File BackGroundMusic = new File("C:\\Users\\Xuanyi Zhu\\OneDrive\\CS 110\\Krakout\\music\\Music.wav");
 
     /**
      * Launches the application.
@@ -36,6 +42,7 @@ public class Krakout extends Application {
      */
     public static void main(String[] args) {
         Application.launch(args);
+
     }
 
     /**
@@ -51,14 +58,35 @@ public class Krakout extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         krakoutBoard = new KrakoutBoard();
-
+        KrakoutGame.playBGMusic(BackGroundMusic);
         statusLabel = new Label("Krakout");
         statusLabel.setTextFill(Color.RED);
 
+        MenuBar menuBar = new MenuBar();
+        Menu menuFile = new Menu("File");
+
+        MenuItem newGame = new MenuItem("New Game");
+        newGame.setOnAction((ActionEvent t) -> {
+            newGame();
+        });
+
+        MenuItem Pause = new MenuItem("Pause");
+        Pause.setOnAction((ActionEvent t) -> {
+            pause();
+        });
+
+        MenuItem Resume = new MenuItem("Resume");
+        Resume.setOnAction((ActionEvent t) -> {
+            resume();
+        });
+        menuFile.getItems().addAll(newGame, Pause, Resume);
+        Menu menuScore = new Menu("Score");
+        Menu menuSetting = new Menu("Setting");
+        menuBar.getMenus().addAll(menuFile, menuScore, menuSetting);
+
         BorderPane pane = new BorderPane();
         pane.setCenter(krakoutBoard);
-        pane.setTop(statusLabel);
-
+        pane.setTop(menuBar);
         Scene scene = new Scene(pane);
 
         game = new KrakoutGame(this, krakoutBoard);
@@ -70,8 +98,13 @@ public class Krakout extends Application {
         primaryStage.setTitle("Krakout");
 
         primaryStage.setScene(scene);
-
+//        primaryStage.setScene(scene1);
         primaryStage.show();
+
+    }
+
+    public void newGame() {
+
     }
 
     /**
