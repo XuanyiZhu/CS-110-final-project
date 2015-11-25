@@ -10,6 +10,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
+import java.io.*;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.AudioInputStream;
 
 /**
  * This should be implemented to include your game control.
@@ -24,9 +28,9 @@ public class KrakoutGame {
 //    LinkedList<KrakoutSquare> square = new LinkedList<>();
     ArrayList<KrakoutSquare> square = new ArrayList<>();
     Iterator iterate = square.iterator();
+    File BoxSmash = new File("C:\\Users\\Xuanyi Zhu\\OneDrive\\CS 110\\Krakout\\music\\BoxSmash.wav");
+    File Sound = new File("C:\\Users\\Xuanyi Zhu\\OneDrive\\CS 110\\Krakout\\music\\Sound.wav");
 
-
-    
     /**
      * Initialize the game. Remove the example code and replace with code that
      * creates a random piece.
@@ -37,18 +41,18 @@ public class KrakoutGame {
     public KrakoutGame(Krakout krakoutApp, KrakoutBoard board) {
 //         Some sample code that places two squares on the board.
 //         Take this out and construct your random piece here.
-
+        playBGMusic(Sound);
         DrawingBoard line = new DrawingBoard(board);
         line.setLine(Color.BLACK, 5.0);
         this.line = line;
 
         for (int i = 0; i < KrakoutBoard.numberOfBoxes; i++) {
-           
+
             square.add(new KrakoutSquare(board));
             square.get(i).moveToKrakoutLocation((1 + i - KrakoutBoard.X_DIM_SQUARES * (i / KrakoutBoard.X_DIM_SQUARES)), 1 + i / KrakoutBoard.X_DIM_SQUARES);
             square.get(i).setColor(Color.rgb((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255)));
         }
-        
+
 //        Iterator<KrakoutSquare> iterator = square.iterator();
 //        while (iterator.hasNext()){
 //            int i = 0; 
@@ -56,7 +60,6 @@ public class KrakoutGame {
 //                    1 + i / KrakoutBoard.X_DIM_SQUARES);
 //            i++;
 //        }
-
         KrakoutBall ball = new KrakoutBall(board, line);
         ball.setBall(Color.BLACK, Color.WHITE);
         this.ball = ball;
@@ -78,44 +81,41 @@ public class KrakoutGame {
         Point2D directionVector = ball.updateVector();
         double directionVectorX = directionVector.getX();
         double directionVectorY = directionVector.getY();
-        System.out.println("before check direction Y = "+directionVectorY );
-        for (int i = 0; i < KrakoutBoard.numberOfBoxes; i++) {
-            double squareX = getBoxesLocation(i).getX();
-            double squareY = getBoxesLocation(i).getY();
-            
-            // touch the bottom/top of boxes
-            if (squareX <= ball.getCenterX() && squareX + KrakoutBoard.SQUARE_SIZE>= ball.getCenterX() && 
-                    ball.getCenterY() - squareY - KrakoutBoard.SQUARE_SIZE <= ball.RADIUS) {
-//                System.out.println("Touching the buttom of boxes");
-//                System.out.println("before vector" + directionVectorY);
-                //change direction
-              directionVectorY *= -1;
-                       System.out.println("when touching direction Y = "+ directionVectorY );
-                directionVector.normalize();
-                ball.moveBall(directionVectorX + ball.getCenterX(), directionVectorY + ball.getCenterY());
-                //remove the boxes
-                square.get(i).removeFromDrawing();
-            } 
-                   System.out.println("after first touching direction Y = "+directionVectorY );
-            
-//            //touch the left/right of boxes
-//            else if (squareY <= ball.getCenterY() && squareY + KrakoutBoard.SQUARE_SIZE>= ball.getCenterY() 
-//                    && (squareX - ball.getCenterX()  <= ball.RADIUS || ball.getCenterX() - squareX - KrakoutBoard.SQUARE_SIZE <= ball.RADIUS)){
-//                
+        System.out.println("before check direction Y = " + directionVectorY);
+//        for (int i = 0; i < KrakoutBoard.numberOfBoxes; i++) {
+//            double squareX = getBoxesLocation(i).getX();
+//            double squareY = getBoxesLocation(i).getY();
+//
+//            // touch the bottom/top of boxes
+//            if (squareX <= ball.getCenterX() && squareX + KrakoutBoard.SQUARE_SIZE >= ball.getCenterX()
+//                    && ball.getCenterY() - squareY - KrakoutBoard.SQUARE_SIZE <= ball.RADIUS) {
+////                System.out.println("Touching the buttom of boxes");
+////                System.out.println("before vector" + directionVectorY);
+//                //change direction
+//                directionVectorY *= -1;
+//                System.out.println("when touching direction Y = " + directionVectorY);
+//                directionVector.normalize();
+//                ball.moveBall(directionVectorX + ball.getCenterX(), directionVectorY + ball.getCenterY());
+//                //remove the boxes
+//                square.get(i).removeFromDrawing();
 //            }
-            
-           
-        }
-        System.out.println("after vector" + directionVectorY);
-        System.out.println("vector " + directionVector);
-               System.out.println("at the end direction Y = "+directionVectorY );
+//            System.out.println("after first touching direction Y = " + directionVectorY);
+//
+////            //touch the left/right of boxes
+////            else if (squareY <= ball.getCenterY() && squareY + KrakoutBoard.SQUARE_SIZE>= ball.getCenterY() 
+////                    && (squareX - ball.getCenterX()  <= ball.RADIUS || ball.getCenterX() - squareX - KrakoutBoard.SQUARE_SIZE <= ball.RADIUS)){
+////                
+////            }
+//        }
+//        System.out.println("after vector" + directionVectorY);
+//        System.out.println("vector " + directionVector);
+//        System.out.println("at the end direction Y = " + directionVectorY);
         ball.moveBall(directionVectorX + ball.getCenterX(), directionVectorY + ball.getCenterY());
 
 //        for (int i = 0; i < KrakoutBoard.numberOfBoxes; i++) {
 //            square.get(i).move(0.005);
 //
 //        }
-
     }
 
     /**
@@ -139,5 +139,23 @@ public class KrakoutGame {
         }
 
     }
+
+
+    public static synchronized void playBGMusic(File Sound) {
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    Clip clip = AudioSystem.getClip();
+                    AudioInputStream inputStream = AudioSystem.getAudioInputStream(Sound);
+                    clip.open(inputStream);
+                    clip.start();
+                    
+                } catch (Exception e) {
+                    System.err.println(e.getMessage());
+                }
+            }
+        }).start();
+    }
+    
 
 }
